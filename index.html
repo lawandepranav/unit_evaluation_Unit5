@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+</head>
+<body>
+   
+    <div id="form">
+        <input type="text" name="" id="title" placeholder="Title">
+        <input type="checkbox" id="check" value="checked">
+
+        <button onclick="addtask()">Add new task</button>
+    </div>
+    <div id="container">
+        
+    </div>
+</body>
+<script>
+
+let container = document.getElementById("container");
+
+
+async function addtask() {
+try {
+let title = document.getElementById("title").value;
+let status = document.getElementById("check").value;
+let value=false;
+let body={
+    title,
+    value
+}
+if(status=="checked"){
+    value=true;
+}
+let res = await fetch(`http://localhost:3000/tasks`,{
+"method": "POST",
+body: JSON.stringify(body),
+headers: {
+"Content-Type": "application/json"
+}
+});
+let data= await res.json();
+updateDOM();
+}
+catch(error){
+    console.log("error")
+}
+}
+
+
+
+async function updateDOM() {
+    try {
+
+let res = await fetch('http://localhost:3000/tasks');
+let data= await res.json();
+
+data.forEach(element => {
+    let task = document.createElement("div");
+    if(element.value==true){
+        task.setAttribute.backgroundColor="green";
+    }
+   let title = document.createElement("p");
+    title.innerText=element.title;
+    task.append(title);
+    container.append(task)
+});
+    }
+catch(error){
+console.log("error")
+}
+}
+
+updateDOM();
+
+
+</script>
+</html>
